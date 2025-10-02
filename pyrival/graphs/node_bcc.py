@@ -1,11 +1,11 @@
 """
-REMARK: There are two definitions of biconnectedness of an undirected graph, 
+REMARK: There are two definitions of biconnectedness of an undirected graph,
         either node-bcc or edge-bcc, corresponding to node_bcc.py and edge_bcc.py.
 
-* In node-bcc, a "cut-vertex" (also called an articulation point) is a node where 
+* In node-bcc, a "cut-vertex" (also called an articulation point) is a node where
   removing it would split up the graph into multiple connected components.
 
-* In edge-bcc, a "bridge" is an edge where removing it would split up the graph 
+* In edge-bcc, a "bridge" is an edge where removing it would split up the graph
   into multiple connected components.
 
 For example, this graph
@@ -29,14 +29,14 @@ by removing a single node.
 Note that a node belongs to multiple node-bccs iff it is an articulation point.
 """
 
-def find_bcc(graph):
+def find_bcc(graph: list[list[int]]) -> list[list[int]]:
     n = len(graph)
     BCC = []
- 
+
     P = [-1] * n
     depth = [-1] * n
     biconnect = [None] * n
- 
+
     preorder = []
     stack = list(range(n))
     while stack:
@@ -49,19 +49,19 @@ def find_bcc(graph):
             if depth[nei] == -1:
                 P[nei] = node
                 stack.append(nei)
- 
+
     for node in reversed(preorder):
         if P[node] != -1:
-            depth[node] = min(depth[nei] for nei in graph[node]) 
+            depth[node] = min(depth[nei] for nei in graph[node])
             if depth[P[node]] == depth[node]:
                 bicon = biconnect[node] = [P[node], node]
                 BCC.append(bicon)
-   
+
     for node in preorder:
         if not graph[node]:
             BCC.append([node])
         elif P[node] != -1 and biconnect[node] is None:
             bicon = biconnect[node] = biconnect[P[node]]
             bicon.append(node)
-    
+
     return BCC
